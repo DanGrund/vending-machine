@@ -1,32 +1,53 @@
 require('babel-core/register')({
   ignore: /node_modules\/(?!ProjectB)/
 });
-
 const assert = require('chai').assert
-const VendingMachine = require('../vendingMachine').default
+const VendingMachine = require('../vendingMachine').default;
 const Person = require('../person').default
 
-describe('Elevator', function() {
+describe('Vending Machine', () => {
+
   const vendingMachine = new VendingMachine()
-  const alex = new Person("Alex", 100)
+  const dan = new Person()
 
-  afterEach(function() {
+  afterEach(() => {
     vendingMachine.reset();
+    dan.reset()
   });
 
-  xit('should bring a rider to a floor above their current floor', () => {
-    // Assert the current status of the vendingMachine is idle
-    assert.equal(vendingMachine.status, 'idle')
-
-    // Alex inserts a dollar into the vending machine
-    vendingMachine.insertCredit(alex, 100)
-
-    // Assert the current status of the vendingMachine is 'credited' after credits inserted
-    assert.equal(vendingMachine.status, 'credited')
-    // Assert the total number of credits is 100 cents ($1.00) after credits inserted
-    assert.equal(vendingMachine.credits, 100)
-    // Assert the total number of change is 0 cents ($0.00) before selection is made
-    assert.equal(vendingMachine.change, 0)
+  it('will accept currency', () => {
+    assert.equal(vendingMachine.state.status, 'idle')
+    assert.equal(dan.state.credits, 500)
+    vendingMachine.insertCredit(dan, 100)
+    assert.equal(vendingMachine.state.status, 'credited')
+    assert.equal(vendingMachine.state.credits, 100)
+    assert.equal(vendingMachine.state.change, 0)
+    assert.equal(dan.state.credits, 400)
   });
+
+  it('will validate that the amount of inserted credits is sufficient for selection', ()=> {
+    vendingMachine.insertCredit(dan, 100)
+    assert.equal(vendingMachine.state.status, 'credited')
+    vendingMachine.checkCredits()
+    assert.equal(vendingMachine.state.status, 'vending')
+    assert.equal(vendingMachine.state.change, 25)
+  })
+
+  it('will return a message if there aren\'t enough credits for selection', ()=> {
+    vendingMachine.insertCredit(dan, 50)
+    assert.equal(vendingMachine.state.status, 'credited')
+    vendingMachine.checkCredits()
+    assert.equal(vendingMachine.state.status, 'not enough credits')
+  })
+
+  it('will dispense change to a person', ()=> {
+    console.log(dan.state.credits)
+    vendingMachine.insertCredit(dan, 100)
+    console.log(dan.state.credits)
+    vendingMachine.checkCredits()
+    vendingMachine.dispense(dan)
+    assert.equal(dan.state.credits, 425)
+
+  })
 
 });
