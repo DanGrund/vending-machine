@@ -1,6 +1,6 @@
 export default class VendingMachine {
   constructor() {
-    // status can be ["idle", "credited", "vending", "not enough "]
+    // status can be ["idle", "credited", "vending", "not enough"]
     this.state = {
       status: 'idle',
       credits: 0,
@@ -8,6 +8,10 @@ export default class VendingMachine {
       selection: null,
       treats: [{name: "treat", price: 75}]
     }
+  }
+
+  loadTreats(treats) {
+    this.state.treats = treats
   }
 
   insertCredit(person, amount) {
@@ -27,6 +31,10 @@ export default class VendingMachine {
       this.state.status = 'not enough credits';
     }
   }
+
+  //selectTreat()
+
+  // checkInventory()
 
   dispense(person) {
     const change = this.state.change;

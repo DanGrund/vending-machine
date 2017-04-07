@@ -5,7 +5,10 @@ export default class Person {
     }
   }
 
-  
+  begMomForMoney() {
+    this.state.credits += 500;
+  }
+
   reset() {
     this.constructor()
   }
