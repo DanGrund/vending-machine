@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="styles/reset.css">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <title>A Vending Machine Exercise</title>
+  </head>
+  <body>
+    <section id="person">
+      <div id='name'>name</div>
+      you have
+      <div id='person-credits'>credits</div>
+      <div id='person-treats'></div>
+      <div>need more?
+        <button id='beg'>beg mom for money</button>
+      </div>
+    </section>
+
+    <section id="vending-machine">
+      <article id="controls">
+        <div id='credits'>
+          insert credits
+          <button id='quarter'>
+            25
+          </button>
+          <button id='dollar'>
+            100
+          </button>
+        </div>
+        <div id='inserted-credits'>
+
+        </div>
+        <div id="display">
+        </div>
+      </article>
+        <div id="treats">
+
+        </div>
+    </section>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="lib/vendingMachine.js"></script>
+    <script src="lib/person.js"></script>
+    <script src="lib/treat.js"></script>
+    <script src="lib/index.js"></script>
+  </body>
+</html>
