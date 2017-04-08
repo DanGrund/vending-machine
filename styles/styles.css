@@ -1,0 +1,68 @@
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 100px
+}
+
+#person{
+  width: 45vw;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#vending-machine{
+  width: 45vw;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+}
+
+#controls{
+  margin: 5px;
+  border: 1px solid pink;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+#credits{
+  margin: 5px;
+  padding: 5px 20px;
+  border: 1px solid green;
+}
+
+#display{
+  margin: 5px;
+  padding: 5px 20px;
+  border: 1px solid green;
+}
+
+.treat {
+  margin: 5px;
+  border: 1px solid teal;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.selection {
+margin: 5px;
+}
+
+.treat-name {
+  margin: 5px;
+  font-weight: bold;
+}
+.treat-price {
+  border: 1px solid black;
+  margin: 5px;
+}
+
+.treat-quant {
+  margin: 5px;
+}

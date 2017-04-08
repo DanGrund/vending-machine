@@ -1,13 +1,14 @@
 require('babel-core/register')({ignore: /node_modules\/(?!ProjectB)/});
 const assert = require('chai').assert
-const VendingMachine = require('../vendingMachine').default;
-const Person = require('../person').default
-const Treat = require('../treat').default
+const VendingMachine = require('../lib/vendingMachine').default;
+const Person = require('../lib/person').default
+const Treat = require('../lib/treat').default
 
 describe('Vending Machine', () => {
 
   const vendingMachine = new VendingMachine()
   const dan = new Person()
+  const treat = new Treat('treat', 75, 20)
 
   afterEach(() => {
     vendingMachine.reset();
@@ -19,7 +20,7 @@ describe('Vending Machine', () => {
     assert.equal(vendingMachine.state.credits, 0)
     assert.equal(vendingMachine.state.change, 0)
     assert.equal(vendingMachine.state.selection, null)
-    assert.deepEqual(vendingMachine.state.treats, [{ name: 'treat', price: 75 }])
+    assert.deepEqual(vendingMachine.state.treats, [])
   })
 
   it('will accept currency', () => {
@@ -32,27 +33,46 @@ describe('Vending Machine', () => {
     assert.equal(dan.state.credits, 400)
   });
 
-  it('will validate that the amount of inserted credits is sufficient for selection', ()=> {
+  it('will load treats', () => {
+    vendingMachine.loadMachine([treat])
+    assert.deepEqual(vendingMachine.state.treats, [treat])
+  })
+
+  it('will allow a selection to be made', () => {
+    vendingMachine.loadMachine([treat])
+    vendingMachine.selectTreat('treat')
+    assert.deepEqual(vendingMachine.state.selection, [treat])
+  })
+
+  it('will validate that the amount of inserted credits is sufficient for selection', () => {
+    vendingMachine.loadMachine([treat])
     vendingMachine.insertCredit(dan, 100)
     assert.equal(vendingMachine.state.status, 'credited')
-    vendingMachine.checkCredits()
-    assert.equal(vendingMachine.state.status, 'vending')
+    vendingMachine.selectTreat('treat', dan)
+    assert.equal(vendingMachine.state.status, 'idle')
     assert.equal(vendingMachine.state.change, 25)
   })
 
-  it('will return a message if there aren\'t enough credits for selection', ()=> {
+  it('will return a message if there aren\'t enough credits for selection', () => {
+    vendingMachine.loadMachine([treat])
     vendingMachine.insertCredit(dan, 50)
     assert.equal(vendingMachine.state.status, 'credited')
+    vendingMachine.selectTreat('treat', dan)
     vendingMachine.checkCredits()
     assert.equal(vendingMachine.state.status, 'not enough credits')
   })
 
-  it('will dispense change to a person', ()=> {
-    console.log(dan.state.credits)
+  it('will check inventory', () => {
+    vendingMachine.loadMachine([treat])
     vendingMachine.insertCredit(dan, 100)
-    console.log(dan.state.credits)
-    vendingMachine.checkCredits()
-    vendingMachine.dispense(dan)
+    vendingMachine.selectTreat('treat', dan)
+    assert.equal(vendingMachine.state.status, 'idle')
+  })
+
+  it('will dispense change to a person', () => {
+    vendingMachine.loadMachine([treat])
+    vendingMachine.insertCredit(dan, 100)
+    vendingMachine.selectTreat('treat', dan)
     assert.equal(dan.state.credits, 425)
   })
 
@@ -62,9 +82,9 @@ describe('Treat', () => {
   const treat = new Treat('marlboro', 500, 10)
 
   it('is instantiated with properties for name, price, and quantity', () => {
-    assert.equal(treat.state.name, 'marlboro')
-    assert.equal(treat.state.price, 500)
-    assert.equal(treat.state.quantity, 10)
+    assert.equal(treat.name, 'marlboro')
+    assert.equal(treat.price, 500)
+    assert.equal(treat.quantity, 10)
   })
 })
 
